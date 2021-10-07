@@ -1,0 +1,67 @@
+{
+  "name": "henmiss",
+  "version": "1.0.0",
+  "description": "HEN helper",
+  "main": "./src/index.js",
+  "scripts": {
+    "clean:build": "rimraf dist",
+    "clean:coverage": "rimraf coverage",
+    "clean": "yarn clean:build && yarn clean:coverage",
+    "clean:all": "yarn clean && rimraf node_modules",
+    "lint": "eslint ./src/**",
+    "test": "cross-env NODE_ENV=testing NODE_PATH=./src jest",
+    "test:coverage": "yarn test --coverage",
+    "build": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist",
+    "build:minify": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist --presets minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hermeslin/henmiss.git"
+  },
+  "author": "hermes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hermeslin/henmiss/issues"
+  },
+  "homepage": "https://github.com/hermeslin/henmiss#readme",
+  "engines": {
+    "node": ">= 14"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!**/node_modules /**",
+      "!**/vendor/**"
+    ]
+  },
+  "dependencies": {
+    "@starcoin/stc-hdkey": "^0.3.0",
+    "@taquito/signer": "^10.1.3",
+    "@taquito/utils": "^10.1.3",
+    "bip39": "^3.0.4",
+    "blakejs": "^1.1.1",
+    "buffer-to-uint8array": "^1.1.0",
+    "node-fetch": "^3.0.0",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/register": "^7.11.5",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.5.2",
+    "babel-preset-minify": "^0.5.1",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "jest": "^26.5.3",
+    "lint-staged": "^10.4.0",
+    "rimraf": "^3.0.2"
+  }
+}
