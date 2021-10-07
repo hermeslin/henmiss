@@ -18,6 +18,8 @@ export const getLegacyKeyPair = (mnemonic) => {
 
 /**
  * convert mnemonic to HD key pair
+ * NOTE: @starcoin/stc-hdkey use 'ed25519 seed' as Master key.
+ * That's why I choose this package to generate hd key
  *
  * @param {string} mnemonic
  * @param {string} derivationPath
@@ -25,9 +27,6 @@ export const getLegacyKeyPair = (mnemonic) => {
  */
 export const getHdKeyPair = (mnemonic, derivationPath) => {
   const seedBuffer = bip39.mnemonicToSeedSync(mnemonic);
-
-  // @starcoin/stc-hdkey use 'ed25519 seed' as Master key.
-  // That's why I choose this package to generate hd key
   const hdKey = HDKey.fromMasterSeed(seedBuffer);
   const childNode = hdKey.derive(derivationPath);
 
