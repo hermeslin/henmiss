@@ -3,12 +3,26 @@ import b2u8 from 'buffer-to-uint8array';
 import { blake2b } from 'blakejs';
 import { sign as naclSign } from 'tweetnacl';
 import { prefix, Prefix, b58cencode } from '@taquito/utils';
+import { InMemorySigner } from '@taquito/signer';
+import { TezosToolkit } from '@taquito/taquito';
 import HDKey from '@starcoin/stc-hdkey';
+
+
+/**
+ * validate mnemoinc
+ *
+ * @param {string} mnemonic your wallet mnemonic
+ * @returns {boolean}
+ */
+export const validateMnemonic = (mnemonic) => {
+  return bip39.validateMnemonic(mnemonic);
+}
 
 /**
  * convert mnemonic to key pair
  *
  * @param {string} mnemonic your wallet mnemonic
+ * @returns {object} key pair that contains secret key, public key
  */
 export const getLegacyKeyPair = (mnemonic) => {
   // NOTE: ed25519 spec only support 32 Byte
@@ -23,7 +37,7 @@ export const getLegacyKeyPair = (mnemonic) => {
  *
  * @param {string} mnemonic
  * @param {string} derivationPath
- * @returns
+ * @returns {object}
  */
 export const getHdKeyPair = (mnemonic, derivationPath) => {
   const seedBuffer = bip39.mnemonicToSeedSync(mnemonic);
@@ -38,8 +52,8 @@ export const getHdKeyPair = (mnemonic, derivationPath) => {
  *
  * @param {string} mnemonic
  * @param {boolean} isLegacy
- * @param {string} derivationPath
- * @returns
+ * @param {string} derivationPath derivation path
+ * @returns {object}
  */
 export const getKeyPair = (mnemonic, isLegacy = false, derivationPath) => {
   return (isLegacy) ? getLegacyKeyPair(mnemonic) : getHdKeyPair(mnemonic, derivationPath);
@@ -53,7 +67,7 @@ export const getKeyPair = (mnemonic, isLegacy = false, derivationPath) => {
  * @param {string} mnemonic
  * @param {boolean} isLegacy
  * @param {string} derivationPath
- * @returns
+ * @returns {object}
  */
 export const getTezosKeyPair = (mnemonic, isLegacy = false, derivationPath = `m/44'/1729'/0'/0'`) => {
   const keyPair = getKeyPair(mnemonic, isLegacy, derivationPath);
@@ -63,4 +77,20 @@ export const getTezosKeyPair = (mnemonic, isLegacy = false, derivationPath = `m/
     publicKey: b58cencode(keyPair.publicKey, prefix[Prefix.EDPK]),
     publicKeyHash: b58cencode(blake2b(keyPair.publicKey, null, 20), prefix[Prefix.TZ1]),
   }
+}
+
+/**
+ * validate tezoss address
+ *
+ * @param {*} secretKey secret Key
+ * @param {*} tezosAddress tezos address
+ * @returns {boolean}
+ */
+export const validateTezosAddress = async (secretKey, tezosAddress) => {
+  const signer = await InMemorySigner.fromSecretKey(secretKey);
+
+  const Tezos = new TezosToolkit();
+  Tezos.setProvider({ signer });
+
+  return await Tezos.signer.publicKeyHash() === tezosAddress;
 }
