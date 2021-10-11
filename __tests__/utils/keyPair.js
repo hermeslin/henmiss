@@ -1,4 +1,4 @@
-import { getTezosKeyPair, validateMnemonic, validateTezosAddress } from '../../src/utils/keyPair';
+import { getTezosKeyPair, validateMnemonic, validateTezosAddress } from '../../src/utils/keyPair.js';
 
 describe('generate key pair from mnemonic', () => {
   it('gets the legace key pair', async () => {
