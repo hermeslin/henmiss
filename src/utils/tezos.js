@@ -1,5 +1,5 @@
 import bigInt from 'big-integer';
-import { config } from '../config';
+import { config } from '../config/index.js';
 
 /**
  *

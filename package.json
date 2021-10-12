@@ -45,7 +45,11 @@
     "bip39": "^3.0.4",
     "blakejs": "^1.1.1",
     "buffer-to-uint8array": "^1.1.0",
+    "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
+    "inquirer": "^8.2.0",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "node-fetch": "^3.0.0",
     "tweetnacl": "^1.0.3"
   },
