@@ -1,32 +1,41 @@
-import { InMemorySigner } from '@taquito/signer';
-import { TezosToolkit } from '@taquito/taquito';
+import { setSigner } from '../utils/tezos.js';
 import { config } from '../config/index.js';
 
 /**
  *
  * @param {*} message
  */
-function TezosException(message) {
+function HenException(message) {
   this.message = message;
   this.name = 'TezosException';
 }
 
 /**
- * collect the swap
  *
- * @param {*} swapId
+ * @returns
  */
-export const collect = async (swapId, price, secretKey) => {
-  const Tezos = new TezosToolkit(config.tezos.rpcNode);
-  const signer = await InMemorySigner.fromSecretKey(secretKey);
+export const initCollectContract = async (tezos) => {
+  const contractAddress = config.hen.marketplaceAddress;
+  const contract = await tezos.contract.at(contractAddress);
 
-  // set im menmory signer
-  Tezos.setProvider({ signer });
-
-  // get smart contract info
-  const contract = await Tezos.contract.at(config.hen.marketplaceAddress);
   if (!contract.methods.hasOwnProperty('collect')) {
-    throw new TezosException(`${config.hen.marketplaceAddress} not has collect method.`);
+    throw new HenException(`${contractAddress} not has collect method.`);
+  }
+
+  return contract;
+}
+
+/**
+ *
+ * @param {*} contract
+ * @param {*} swapId
+ * @param {*} price
+ * @returns
+ */
+export const sendCollectTransaction = async (contract, swapId, price) => {
+
+  if (!contract.methods.hasOwnProperty('collect')) {
+    throw new HenException(`${contractAddress} not has collect method.`);
   }
 
   const operation = await contract.methods.collect(parseFloat(swapId)).send({
@@ -35,8 +44,35 @@ export const collect = async (swapId, price, secretKey) => {
     storageLimit: 350,
   });
 
-  // number of confirmation to wait for
-  await operation.confirmation(2);
+  return operation;
+}
 
+/**
+ * number of confirmation to wait for
+ *
+ * @param {*} operation
+ * @param {*} confirmation
+ * @returns
+ */
+export const confirmTransaction = async (operation, confirmation = 1) => {
+  await operation.confirmation(confirmation);
   return operation.hash;
+}
+
+/**
+ * collect the swap
+ *
+ * @param {*} swapId
+ * @param {*} price
+ * @param {*} secretKey
+ * @returns {string} operation hash
+ */
+export const collect = async (swapId, price, secretKey) => {
+  //
+  const tezos = await setSigner(secretKey);
+  const contract = await initCollectContract(tezos);
+  const operation = await sendCollectTransaction(contract, swapId, price);
+  const operationHash = await confirmTransaction(operation);
+
+  return operationHash;
 }
