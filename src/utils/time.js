@@ -1,4 +1,5 @@
 import moment from 'moment';
+import inquirer from 'inquirer';
 
 /**
  *
@@ -7,7 +8,9 @@ import moment from 'moment';
  * @param {*} now
  * @returns
  */
-export const startIndicator = (ui, message, now = null) => {
+export const startIndicator = (message, now = null) => {
+  const ui = new inquirer.ui.BottomBar();
+
   if (now === null) {
     now = moment(new Date()).utc();
   }
@@ -15,13 +18,16 @@ export const startIndicator = (ui, message, now = null) => {
   let i = 0;
   const loader = [`/ ${message}`, `| ${message}`, `\\ ${message}`, `- ${message}`]
 
-  const intervalId = setInterval(() => {
+  const sratInterval = setInterval(() => {
     const indicator = loader[i % 4];
     i = (i % 4 === 3) ? 0 : i + 1;
     ui.updateBottomBar(`${indicator}, ${now.fromNow(true)} has passed.`);
   }, 200);
 
-  return intervalId;
+  return {
+    ui,
+    sratInterval
+  };
 }
 
 /**
@@ -30,9 +36,34 @@ export const startIndicator = (ui, message, now = null) => {
  * @param {*} intervalId
  * @param {*} clear
  */
-export const stopIndicator = (ui, intervalId, clear = true) => {
-  clearInterval(intervalId);
+export const stopIndicator = (interval, clear = true) => {
+  const { ui, sratInterval } = interval
+  clearInterval(sratInterval);
   if (clear) {
     ui.updateBottomBar('');
   }
+  ui.close();
+}
+
+/**
+ *
+ * @param {*} ms
+ * @returns
+ */
+export const wait = async (ms) => {
+  return Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ *
+ * @param {*} ms
+ * @param {*} message
+ * @returns
+ */
+export const waitThenThrow = async (ms, message) => {
+  return Promise(resolve => {
+    setTimeout(() => {
+      throw message;
+    }, ms);
+  });
 }
