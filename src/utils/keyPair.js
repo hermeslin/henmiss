@@ -1,7 +1,7 @@
 import * as bip39 from 'bip39';
 import b2u8 from 'buffer-to-uint8array';
 import { blake2b } from 'blakejs';
-import { sign as naclSign } from 'tweetnacl';
+import tweetnacl from 'tweetnacl';
 import { prefix, Prefix, b58cencode } from '@taquito/utils';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
@@ -27,7 +27,7 @@ export const validateMnemonic = (mnemonic) => {
 export const getLegacyKeyPair = (mnemonic) => {
   // NOTE: ed25519 spec only support 32 Byte
   const seedBuffer = bip39.mnemonicToSeedSync(mnemonic).slice(0, 32);
-  return naclSign.keyPair.fromSeed(b2u8(seedBuffer));
+  return tweetnacl.sign.keyPair.fromSeed(b2u8(seedBuffer));
 }
 
 /**
@@ -44,7 +44,7 @@ export const getHdKeyPair = (mnemonic, derivationPath) => {
   const hdKey = HDKey.fromMasterSeed(seedBuffer);
   const childNode = hdKey.derive(derivationPath);
 
-  return naclSign.keyPair.fromSeed(b2u8(childNode.privateKey));
+  return tweetnacl.sign.keyPair.fromSeed(b2u8(childNode.privateKey));
 }
 
 /**
