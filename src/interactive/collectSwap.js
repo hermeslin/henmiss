@@ -8,7 +8,7 @@ import {
   confirmTransaction
 } from '../hen/smartContract.js';
 import { fetchObjktSwaps } from '../hen/graphql.js';
-import { collectableSwaps } from './listFormat.js';
+import { collectableSwaps } from './format/listFormat.js';
 import { startIndicator, stopIndicator } from '../utils/time.js';
 
 /**

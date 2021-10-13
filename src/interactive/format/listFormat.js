@@ -1,5 +1,5 @@
 
-import { mutez2Tez } from "../utils/tezos.js";
+import { mutez2Tez } from "../../utils/tezos.js";
 
 /**
  * Foramt collectable swap data
