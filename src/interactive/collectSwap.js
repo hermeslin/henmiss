@@ -177,14 +177,14 @@ const collect = async (swapId, price, secretKey) => {
  *
  * @returns
  */
-const interActive = async () => {
+const collectSwap = async () => {
   // ask for the token id
   const { tokenId } = await questionToken();
 
   // ask for the price
   const { swapData } = await questionPrice(tokenId);
   if (swapData === 'start-over') {
-    return await interActive();
+    return await collectSwap();
   }
 
   // ask for the secret key
@@ -194,7 +194,7 @@ const interActive = async () => {
   const [swapId, price] = swapData.split(':');
   const { operationHash } = await collect(swapId, price, secretKey);
   if (operationHash === 'start-over') {
-    return await interActive();
+    return await collectSwap();
   }
 
   return {
@@ -206,10 +206,12 @@ const interActive = async () => {
 /**
  *
  */
-interActive()
-  .then((answers) => {
-    const { tokenId, operationHash } = answers;
-    console.log(`${chalk.green('>>')} Hooray! You collect the Objekt(${tokenId}) successfully`);
-    console.log(`${chalk.green('>>')} Here is your tansaction information, https://tzkt.io/${operationHash}`);
-  })
-  .catch(error => console.log(error));
+export const interActive = async () => {
+  const result = await collectSwap();
+  const { tokenId, operationHash } = result;
+
+  console.log(`${chalk.green('>>')} Hooray! You collect the Objekt(${tokenId}) successfully`);
+  console.log(`${chalk.green('>>')} Here is your tansaction information, https://tzkt.io/${operationHash}`);
+
+  return 'done';
+}

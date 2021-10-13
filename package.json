@@ -12,7 +12,9 @@
     "test": "cross-env NODE_ENV=testing NODE_PATH=./src jest",
     "test:coverage": "yarn test --coverage",
     "build": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist",
-    "build:minify": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist --presets minify"
+    "build:minify": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist --presets minify",
+    "dev": "npx babel-node ./src/index.js",
+    "prod": "yarn build:minify && cross-env NODE_ENV=production node ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +29,9 @@
   "engines": {
     "node": ">= 14"
   },
-  "type": "module",
+  "bin": {
+    "henmiss": "./dist/index.js"
+  },
   "jest": {
     "verbose": true,
     "collectCoverageFrom": [
@@ -46,11 +50,12 @@
     "blakejs": "^1.1.1",
     "buffer-to-uint8array": "^1.1.0",
     "chalk": "^4.1.2",
+    "commander": "^8.2.0",
     "dotenv": "^10.0.0",
     "inquirer": "^8.2.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2.6.5",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {

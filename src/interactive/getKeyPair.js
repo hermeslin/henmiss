@@ -3,6 +3,10 @@ import inquirer from "inquirer";
 import { validateMnemonic, getTezosKeyPair } from '../utils/keyPair.js';
 import { startIndicator, stopIndicator } from "../utils/time.js";
 
+/**
+ *
+ * @returns
+ */
 const questionMnemonic = async () => {
   const answer = await inquirer.prompt([
     {
@@ -18,6 +22,10 @@ const questionMnemonic = async () => {
   return answer;
 }
 
+/**
+ *
+ * @returns
+ */
 const questionWalletType = async () => {
   const answer = await inquirer.prompt([
     {
@@ -40,6 +48,10 @@ const questionWalletType = async () => {
   return answer;
 }
 
+/**
+ *
+ * @returns
+ */
 const questionDerivationPath = async () => {
   const answer = await inquirer.prompt([
     {
@@ -65,7 +77,11 @@ const questionPublicKeyHash = async () => {
   return answer;
 }
 
-const interActive = async () => {
+/**
+ *
+ * @returns
+ */
+const getKeyPair = async () => {
 
   const { mnemonic } = await questionMnemonic();
   const { walletType } = await questionWalletType();
@@ -79,27 +95,40 @@ const interActive = async () => {
   const { publicKeyHash } = await questionPublicKeyHash();
 
   const interval = startIndicator('Start calcualte your key pair');
-  const isLegacy = (walletType === 'hd') ? false : true;
-  const tezonsKeyPair = getTezosKeyPair(mnemonic, isLegacy, derivationPath);
-  stopIndicator(interval);
+  try {
+    const isLegacy = (walletType === 'hd') ? false : true;
+    const tezonsKeyPair = getTezosKeyPair(mnemonic, isLegacy, derivationPath);
 
-  return {
-    ...tezonsKeyPair,
-    userInputKeyHash: publicKeyHash
+    stopIndicator(interval);
+    return {
+      ...tezonsKeyPair,
+      userInputKeyHash: publicKeyHash
+    }
+  } catch (error) {
+    stopIndicator(interval);
+    return {
+      error: (undefined === error.message) ? error : error.message,
+    }
   }
 }
 
 /**
  *
  */
-interActive()
-  .then((answers) => {
-    const { secretKey, publicKeyHash, userInputKeyHash } = answers;
+export const interActive = async () => {
+  const result = await getKeyPair();
+  const { error, secretKey, publicKeyHash, userInputKeyHash } = result;
+
+  if (error) {
+    console.log(`${chalk.red('>>')} ${error}`);
+  } else {
     if (publicKeyHash !== userInputKeyHash) {
       console.log(`${chalk.red('>>')} Your mnemoinc seems not to match your Tezos wallet address, try it again.`);
     } else {
       console.log(`${chalk.green('>>')} Here is your secret key, ${chalk.inverse(`PLEASE TAKE GOOD CARE OF IT!`)}`);
       console.log(`${chalk.green('>>')} ${secretKey}`);
     }
-  })
-  .catch(error => console.log(error));
+  }
+  return 'done';
+}
+
