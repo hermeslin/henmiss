@@ -1,7 +1,7 @@
 {
   "name": "henmiss",
-  "version": "1.0.0",
-  "description": "HEN helper",
+  "version": "1.0.1",
+  "description": "HENMISS\n Your salvation when wallet always fail to connect",
   "main": "./src/index.js",
   "scripts": {
     "clean:build": "rimraf dist",
@@ -14,10 +14,10 @@
     "test:coverage": "yarn test --coverage",
     "build": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist",
     "build:minify": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist --presets minify",
-    "pack:alpine": "yarn build:minify && yarn pkg ./dist/index.js --targets node14-alpine-x64 -o ./package/henmiss",
-    "packall": "yarn build:minify && yarn clean:package && yarn pkg ./dist/index.js --targets node14-linux-x64,node14-macos-x64,node14-win-x64 -o ./package/henmiss",
     "dev": "npx babel-node ./src/index.js",
-    "prod": "yarn build:minify && cross-env NODE_ENV=production node ./dist/index.js"
+    "prod": "yarn build:minify && cross-env NODE_ENV=production node ./dist/index.js",
+    "pack:alpine": "yarn build:minify && yarn pkg ./dist/index.js --targets node14-alpine-x64 -o ./package/henmiss",
+    "pack:all": "yarn build:minify && yarn clean:package && yarn pkg ./dist/index.js --targets node14-linux-x64,node14-macos-x64,node14-win-x64 -o ./package/henmiss"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,11 @@
       "src/**/*.js",
       "!**/node_modules /**",
       "!**/vendor/**"
+    ]
+  },
+  "pag": {
+    "assets": [
+      ".env"
     ]
   },
   "dependencies": {

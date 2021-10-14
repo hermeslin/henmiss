@@ -1,9 +1,10 @@
+import * as packageJson from '../package.json';
 import { Command } from 'commander';
 import { interActive as collectSwap } from './interactive/collectSwap.js';
 import { interActive as getKeyPair} from './interactive/getKeyPair.js';
 
 const program = new Command();
-program.version('1.0.0').description('HENMISS\n Your salvation when wallet always fail to connect');
+program.version(packageJson.version).description(packageJson.description);
 
 program.command('collect')
   .description('The interactive interface to help you collect the objkt on the HEN')
