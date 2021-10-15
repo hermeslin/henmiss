@@ -1,15 +1,15 @@
 import inquirer from 'inquirer';
 import moment from 'moment';
 import chalk from 'chalk';
-import { setSigner } from '../utils/tezos.js';
+import { setSigner } from '../utils/tezos';
 import {
   initCollectContract,
   sendCollectTransaction,
-  confirmTransaction
-} from '../hen/smartContract.js';
-import { fetchObjktSwaps } from '../hen/graphql.js';
-import { collectableSwaps } from './format/listFormat.js';
-import { startIndicator, stopIndicator } from '../utils/time.js';
+  confirmTransaction,
+} from '../hen/smartContract';
+import { fetchObjktSwaps } from '../hen/graphql';
+import collectableSwaps from './format/listFormat';
+import { startIndicator, stopIndicator } from '../utils/time';
 
 /**
  *
@@ -20,15 +20,15 @@ const questionToken = async () => {
     {
       type: 'input',
       name: 'tokenId',
-      message: "What's Objkt do you want to buy?",
-      validate(answer) {
-        return answer.match(/^\d+$/) ? true : 'Please enter a number';
+      message: `What's Objkt do you want to buy?`,
+      validate(tokenId) {
+        return tokenId.match(/^\d+$/) ? true : 'Please enter a number';
       },
-    }
+    },
   ]);
 
   return answer;
-}
+};
 
 /**
  *
@@ -55,7 +55,7 @@ const questionPrice = async (tokenId) => {
     swaps.unshift({
       name: 'Choose another Objkt',
       value: 'start-over',
-    })
+    });
     stopIndicator(intervalId);
 
     return await inquirer.prompt([
@@ -73,22 +73,23 @@ const questionPrice = async (tokenId) => {
     ui.log.write(`${chalk.red('>>')} ${(undefined === error.message) ? error : error.message}`);
     ui.close();
 
-    const answer =  await inquirer.prompt([
+    const answer = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'fetchSwapDataAgain',
         message: `Error happens, try to fetch again?`,
-        default: true
+        default: true,
       },
     ]);
 
     if (answer.fetchSwapDataAgain === true) {
-      return await questionPrice(tokenId, ui);
-    } else {
-      return {
-        swapData: 'start-over',
-      };
+      const price = await questionPrice(tokenId, ui);
+      return price;
     }
+
+    return {
+      swapData: 'start-over',
+    };
   }
 };
 
@@ -100,16 +101,16 @@ const questionSecretKey = async () => {
     {
       type: 'password',
       name: 'secretKey',
-      message: "Enter your Private Key",
+      message: `Enter your Secret Key`,
       mask: '*',
-      validate(answer) {
-        return answer.match(/^edsk\w+$/) ? true : 'Not the corrent format';
+      validate(secretKey) {
+        return secretKey.match(/^edsk\w+$/) ? true : 'Not the corrent format';
       },
-    }
+    },
   ]);
 
   return answer;
-}
+};
 
 /**
  *
@@ -131,7 +132,7 @@ const collect = async (swapId, price, secretKey) => {
 
     // get smart contract info
     indicatorIntervalId = startIndicator(`Initial the contract`, now);
-    const contract = await initCollectContract(Tezos)
+    const contract = await initCollectContract(Tezos);
     stopIndicator(indicatorIntervalId, false);
 
     // send the transaction
@@ -145,7 +146,7 @@ const collect = async (swapId, price, secretKey) => {
     stopIndicator(indicatorIntervalId);
 
     return {
-      operationHash
+      operationHash,
     };
   } catch (error) {
     stopIndicator(indicatorIntervalId);
@@ -159,19 +160,20 @@ const collect = async (swapId, price, secretKey) => {
         type: 'confirm',
         name: 'sendTransactionAgain',
         message: `Error happens, try to send transaction again?`,
-        default: true
+        default: true,
       },
     ]);
 
     if (answer.sendTransactionAgain === true) {
-      return await collect(swapId, price, secretKey, ui);
-    } else {
-      return {
-        operationHash: 'start-over',
-      };
+      const sednAgain = await collect(swapId, price, secretKey);
+      return sednAgain;
     }
+
+    return {
+      operationHash: 'start-over',
+    };
   }
-}
+};
 
 /**
  *
@@ -184,7 +186,8 @@ const collectSwap = async () => {
   // ask for the price
   const { swapData } = await questionPrice(tokenId);
   if (swapData === 'start-over') {
-    return await collectSwap();
+    const questionPriceStartOver = await collectSwap();
+    return questionPriceStartOver;
   }
 
   // ask for the secret key
@@ -194,19 +197,20 @@ const collectSwap = async () => {
   const [swapId, price] = swapData.split(':');
   const { operationHash } = await collect(swapId, price, secretKey);
   if (operationHash === 'start-over') {
-    return await collectSwap();
+    const collectStartOver = await collectSwap();
+    return collectStartOver;
   }
 
   return {
     tokenId,
-    operationHash
+    operationHash,
   };
-}
+};
 
 /**
  *
  */
-export const interActive = async () => {
+export default async () => {
   const result = await collectSwap();
   const { tokenId, operationHash } = result;
 
@@ -214,4 +218,4 @@ export const interActive = async () => {
   console.log(`${chalk.green('>>')} Here is your tansaction information, https://tzkt.io/${operationHash}`);
 
   return 'done';
-}
+};

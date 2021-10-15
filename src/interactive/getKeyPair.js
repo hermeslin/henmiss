@@ -1,7 +1,7 @@
-import chalk from "chalk";
-import inquirer from "inquirer";
-import { validateMnemonic, getTezosKeyPair } from '../utils/keyPair.js';
-import { startIndicator, stopIndicator } from "../utils/time.js";
+import chalk from 'chalk';
+import inquirer from 'inquirer';
+import { validateMnemonic, getTezosKeyPair } from '../utils/keyPair';
+import { startIndicator, stopIndicator } from '../utils/time';
 
 /**
  *
@@ -12,15 +12,15 @@ const questionMnemonic = async () => {
     {
       type: 'password',
       name: 'mnemonic',
-      message: "What's your mnemonic?",
-      validate(answer) {
-        return validateMnemonic(answer) ? true : 'Not the correct mnemonic';
+      message: `What's your mnemonic?`,
+      validate(mnemonic) {
+        return validateMnemonic(mnemonic) ? true : 'Not the correct mnemonic';
       },
-    }
+    },
   ]);
 
   return answer;
-}
+};
 
 /**
  *
@@ -31,22 +31,22 @@ const questionWalletType = async () => {
     {
       type: 'list',
       name: 'walletType',
-      message: "What's your wallet type?",
+      message: `What's your wallet type?`,
       choices: [
         {
           name: 'HD Wallet',
-          value: 'hd'
+          value: 'hd',
         },
         {
           name: 'Legacy Wallet',
-          value: 'legacy'
+          value: 'legacy',
         },
-      ]
-    }
+      ],
+    },
   ]);
 
   return answer;
-}
+};
 
 /**
  *
@@ -57,32 +57,31 @@ const questionDerivationPath = async () => {
     {
       type: 'input',
       name: 'derivationPath',
-      message: "Want to customize your derivation path?",
-      default: `m/44'/1729'/0'/0'`
-    }
+      message: `Want to customize your derivation path?`,
+      default: `m/44'/1729'/0'/0'`,
+    },
   ]);
 
   return answer;
-}
+};
 
 const questionPublicKeyHash = async () => {
   const answer = await inquirer.prompt([
     {
       type: 'input',
       name: 'publicKeyHash',
-      message: "Enter your Tezos wallet address",
-    }
+      message: `Enter your Tezos wallet address`,
+    },
   ]);
 
   return answer;
-}
+};
 
 /**
  *
  * @returns
  */
 const getKeyPair = async () => {
-
   const { mnemonic } = await questionMnemonic();
   const { walletType } = await questionWalletType();
 
@@ -96,39 +95,44 @@ const getKeyPair = async () => {
 
   const interval = startIndicator('Start calcualte your key pair');
   try {
-    const isLegacy = (walletType === 'hd') ? false : true;
+    const isLegacy = (walletType === 'legacy');
     const tezonsKeyPair = getTezosKeyPair(mnemonic, isLegacy, derivationPath);
 
     stopIndicator(interval);
     return {
       ...tezonsKeyPair,
-      userInputKeyHash: publicKeyHash
-    }
+      userInputKeyHash: publicKeyHash,
+    };
   } catch (error) {
     stopIndicator(interval);
     return {
       error: (undefined === error.message) ? error : error.message,
-    }
+    };
   }
-}
+};
 
 /**
  *
  */
-export const interActive = async () => {
+export default async () => {
   const result = await getKeyPair();
-  const { error, secretKey, publicKeyHash, userInputKeyHash } = result;
+  const {
+    error,
+    secretKey,
+    publicKeyHash,
+    userInputKeyHash,
+  } = result;
 
   if (error) {
     console.log(`${chalk.red('>>')} ${error}`);
+    return 'error';
+  }
+
+  if (publicKeyHash !== userInputKeyHash) {
+    console.log(`${chalk.red('>>')} Your mnemoinc seems not to match your Tezos wallet address, try it again.`);
   } else {
-    if (publicKeyHash !== userInputKeyHash) {
-      console.log(`${chalk.red('>>')} Your mnemoinc seems not to match your Tezos wallet address, try it again.`);
-    } else {
-      console.log(`${chalk.green('>>')} Here is your secret key, ${chalk.inverse(`PLEASE TAKE GOOD CARE OF IT!`)}`);
-      console.log(`${chalk.green('>>')} ${secretKey}`);
-    }
+    console.log(`${chalk.green('>>')} Here is your secret key, ${chalk.inverse(`PLEASE TAKE GOOD CARE OF IT!`)}`);
+    console.log(`${chalk.green('>>')} ${secretKey}`);
   }
   return 'done';
-}
-
+};

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { config } from '../config/index.js';
+import config from '../config/index';
 
 /**
  * HEN graphql api server

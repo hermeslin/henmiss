@@ -1,5 +1,5 @@
-import { setSigner } from '../utils/tezos.js';
-import { config } from '../config/index.js';
+import { setSigner } from '../utils/tezos';
+import config from '../config/index';
 
 /**
  *
@@ -18,12 +18,12 @@ export const initCollectContract = async (tezos) => {
   const contractAddress = config.hen.marketplaceAddress;
   const contract = await tezos.contract.at(contractAddress);
 
-  if (!contract.methods.hasOwnProperty('collect')) {
+  if (!Object.prototype.hasOwnProperty.call(contract.methods, 'collect')) {
     throw new HenException(`${contractAddress} not has collect method.`);
   }
 
   return contract;
-}
+};
 
 /**
  *
@@ -33,8 +33,9 @@ export const initCollectContract = async (tezos) => {
  * @returns
  */
 export const sendCollectTransaction = async (contract, swapId, price) => {
+  const contractAddress = config.hen.marketplaceAddress;
 
-  if (!contract.methods.hasOwnProperty('collect')) {
+  if (!Object.prototype.hasOwnProperty.call(contract.methods, 'collect')) {
     throw new HenException(`${contractAddress} not has collect method.`);
   }
 
@@ -45,7 +46,7 @@ export const sendCollectTransaction = async (contract, swapId, price) => {
   });
 
   return operation;
-}
+};
 
 /**
  * number of confirmation to wait for
@@ -57,7 +58,7 @@ export const sendCollectTransaction = async (contract, swapId, price) => {
 export const confirmTransaction = async (operation, confirmation = 1) => {
   await operation.confirmation(confirmation);
   return operation.hash;
-}
+};
 
 /**
  * collect the swap
@@ -75,4 +76,4 @@ export const collect = async (swapId, price, secretKey) => {
   const operationHash = await confirmTransaction(operation);
 
   return operationHash;
-}
+};

@@ -15,7 +15,7 @@
     "build": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist",
     "build:minify": "yarn clean:build && yarn test && cross-env BABEL_ENV=production babel src --out-dir dist --presets minify",
     "dev": "npx babel-node ./src/index.js",
-    "prod": "yarn build:minify && cross-env NODE_ENV=production node ./dist/index.js",
+    "prod": "cross-env NODE_ENV=production node ./dist/index.js",
     "pack:alpine": "yarn build:minify && yarn pkg ./dist/index.js --targets node14-alpine-x64 -o ./release/henmiss",
     "pack:all": "yarn build:minify && yarn clean:release && yarn pkg ./dist/index.js --targets node14-linux-x64,node14-macos-x64,node14-win-x64 -o ./release/henmiss"
   },

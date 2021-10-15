@@ -20,7 +20,7 @@ module.exports = {
     "sourceType": "module"
   },
   "rules": {
-    "jest/require-hook": "warn",
+    "jest/require-hook": "off",
     "no-plusplus": [
       "error",
       {

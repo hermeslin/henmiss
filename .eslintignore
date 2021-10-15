@@ -3,4 +3,3 @@ dist/*
 package/*
 .eslintrc.js
 babel.config.cjs
-src/index.js

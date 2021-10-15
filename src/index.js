@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import * as packageJson from '../package.json';
-import { interActive as collectSwap } from './interactive/collectSwap';
-import { interActive as getKeyPair } from './interactive/getKeyPair';
+import collectSwap from './interactive/collectSwap';
+import getKeyPair from './interactive/getKeyPair';
 
 const program = new Command();
 program.version(packageJson.version).description(packageJson.description);

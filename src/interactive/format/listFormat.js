@@ -1,5 +1,5 @@
-
-import { mutez2Tez } from "../../utils/tezos.js";
+import bigInt from 'big-integer';
+import { mutez2Tez } from '../../utils/tezos';
 
 /**
  * Foramt collectable swap data
@@ -7,11 +7,11 @@ import { mutez2Tez } from "../../utils/tezos.js";
  * @param {array} swaps
  * @returns {array}
  */
-export const collectableSwaps = (swaps) => {
+export default (swaps) => {
   // order by status, price
-  return swaps
+  const collectSwaps = swaps
     .sort((a, b) => {
-      const status = a.staus - b.status;
+      const status = parseInt(a.status, 10) - parseInt(b.status, 10);
       const price = bigInt(a.price).subtract(b.price);
       return status || price;
     })
@@ -21,25 +21,27 @@ export const collectableSwaps = (swaps) => {
         price,
         creator: {
           address,
-          name
+          name,
         },
         timestamp,
-        status
+        status,
       } = swap;
 
       let list = {
         name: `${mutez2Tez(price)} TEZ, from ${(name !== '') ? name : address}, at ${timestamp}`,
         value: `${id}:${price}`,
-        short: `${mutez2Tez(price)} TEZ`
+        short: `${mutez2Tez(price)} TEZ`,
       };
 
       if (status !== 0) {
         list = {
           ...list,
           disabled: (status === 1) ? 'finished swap' : 'canceled swap',
-        }
+        };
       }
 
       return list;
     });
-}
+
+  return collectSwaps;
+};
