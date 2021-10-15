@@ -69,11 +69,11 @@
   "devDependencies": {
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
+    "@babel/eslint-parser": "^7.15.8",
     "@babel/node": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
     "@babel/register": "^7.11.5",
-    "babel-eslint": "^10.1.0",
     "babel-jest": "^27.2.5",
     "babel-preset-minify": "^0.5.1",
     "cross-env": "^7.0.2",
