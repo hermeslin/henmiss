@@ -2,6 +2,7 @@
 Help you collect NTFs on HEN smoothly
 
 ## Installation
+Copy `.env-example` to `.env` file and then change the values if you want.
 
 ### docker
 ```sh
