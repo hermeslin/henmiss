@@ -20,7 +20,7 @@ RUN yarn install \
 ## make minimum runtime stage
 FROM alpine:3.14
 
-COPY --from=builder "/root/henmiss/package/henmiss" "/henmiss/henmiss"
+COPY --from=builder "/root/henmiss/release/henmiss" "/henmiss/henmiss"
 COPY --from=builder "/root/henmiss/.env" "/henmiss/.env"
 WORKDIR /henmiss
 
