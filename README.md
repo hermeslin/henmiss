@@ -1,7 +1,9 @@
 # henmiss
 Help you collect NTFs on HEN smoothly
 
-## Installation via docker
+## Installation
+
+### docker
 ```sh
 ## build docker image
 docker build -t henmiss:latest --no-cache .
@@ -10,7 +12,7 @@ docker build -t henmiss:latest --no-cache .
 docker run -it henmiss:latest --help
 ```
 
-## Installation via docker compose
+### docker compose
 ```sh
 ## build docker image
 docker compose build --no-cache
@@ -19,7 +21,7 @@ docker compose build --no-cache
 docker compose run henmiss --help
 ```
 
-## Installation via NodeJs
+### NodeJs
 ```sh
 ## install dependencies
 yarn intall
