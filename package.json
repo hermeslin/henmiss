@@ -43,11 +43,6 @@
       "!**/vendor/**"
     ]
   },
-  "pag": {
-    "assets": [
-      ".env"
-    ]
-  },
   "dependencies": {
     "@starcoin/stc-hdkey": "^0.3.0",
     "@taquito/signer": "^10.1.3",
