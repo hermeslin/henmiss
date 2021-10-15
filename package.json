@@ -1,6 +1,6 @@
 {
   "name": "henmiss",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "HENMISS\n Your salvation when wallet always fail to connect",
   "main": "./src/index.js",
   "scripts": {
