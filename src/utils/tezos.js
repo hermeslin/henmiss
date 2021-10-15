@@ -1,17 +1,14 @@
 import bigInt from 'big-integer';
-import { config } from '../config/index.js';
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
+import config from '../config/index';
 
 /**
  *
  * @param {*} metez
  * @returns
  */
-export const mutez2Tez = (metez) => {
-  return bigInt(metez) / config.tezos.numberOfMutez;
-};
-
+export const mutez2Tez = (metez) => bigInt(metez) / config.tezos.numberOfMutez;
 
 /**
  *
@@ -19,10 +16,10 @@ export const mutez2Tez = (metez) => {
  * @returns
  */
 export const setSigner = async (secretKey) => {
-  const rpcNode = config.tezos.rpcNode;
+  const { rpcNode } = config.tezos;
   const Tezos = new TezosToolkit(rpcNode);
   const signer = await InMemorySigner.fromSecretKey(secretKey);
 
   Tezos.setProvider({ signer });
   return Tezos;
-}
+};
