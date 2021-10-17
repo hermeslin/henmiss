@@ -1,5 +1,8 @@
 FROM node:14.18.1-alpine3.14 as builder
 
+## cpu type
+ARG arch
+
 ## add package
 RUN apk add --no-cache make git bash
 
@@ -13,9 +16,13 @@ COPY ./.env /root/henmiss/.env
 
 ## build henmiss
 WORKDIR /root/henmiss
+
 # RUN npm install -g yarn
-RUN yarn install \
-    && yarn pack:alpine
+RUN yarn install
+RUN if [ "${arch}" = "arm64" ]; \
+        then yarn pack:alpine:arm64; \
+        else yarn pack:alpine; \
+    fi
 
 ## make minimum runtime stage
 FROM alpine:3.14

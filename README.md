@@ -9,6 +9,9 @@ Copy `.env-example` to `.env` file and then change the values if you want.
 ## build docker image
 docker build -t henmiss:latest --no-cache .
 
+## or your cpu architecture is arm type
+docker build -t henmiss:latest --no-cache . --build-arg arch=arm64
+
 ## run this program
 docker run -it henmiss:latest --help
 ```
@@ -17,6 +20,9 @@ docker run -it henmiss:latest --help
 ```sh
 ## build docker image
 docker compose build --no-cache
+
+## or your cpu architecture is arm type
+docker compose build --no-cache . --build-arg arch=arm64
 
 ## run this program
 docker compose run henmiss --help
