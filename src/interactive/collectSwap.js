@@ -83,7 +83,7 @@ const questionPrice = async (tokenId) => {
     ]);
 
     if (answer.fetchSwapDataAgain === true) {
-      const price = await questionPrice(tokenId, ui);
+      const price = await questionPrice(tokenId);
       return price;
     }
 
