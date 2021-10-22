@@ -13,6 +13,7 @@ const questionMnemonic = async () => {
       type: 'password',
       name: 'mnemonic',
       message: `What's your mnemonic?`,
+      mask: '*',
       validate(mnemonic) {
         return validateMnemonic(mnemonic) ? true : 'Not the correct mnemonic';
       },
@@ -65,6 +66,10 @@ const questionDerivationPath = async () => {
   return answer;
 };
 
+/**
+ *
+ * @returns
+ */
 const questionPublicKeyHash = async () => {
   const answer = await inquirer.prompt([
     {
