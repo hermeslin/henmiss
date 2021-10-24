@@ -14,6 +14,12 @@ docker build -t henmiss:latest --no-cache . --build-arg arch=arm64
 
 ## run this program
 docker run -it henmiss:latest --help
+
+## if you want to use container's shell
+docker run -it --rm --entrypoint /bin/ash henmiss:latest
+
+## only for develop testing
+docker build -t henmiss:latest-DEV --no-cache -f ./Dockerfile-DEV .
 ```
 
 ### docker compose
@@ -50,4 +56,9 @@ yarn prod key
 Collect the Objkt
 ```sh
 yarn prod collect
+```
+
+Watch the swapped Objkt
+```sh
+yarn prod watch
 ```
