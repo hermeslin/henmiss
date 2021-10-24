@@ -120,7 +120,7 @@ const questionSecretKey = async () => {
  * @param {*} ui
  * @returns
  */
-const collect = async (swapId, price, secretKey) => {
+export const collect = async (swapId, price, secretKey) => {
   const now = moment(new Date()).utc();
   let indicatorIntervalId = null;
   indicatorIntervalId = startIndicator(`Prepare the signer`, now);
