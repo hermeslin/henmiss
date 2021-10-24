@@ -95,7 +95,7 @@ const questionPriceRange = async () => {
     {
       type: 'input',
       name: 'maximum',
-      message: `Upper bound price of swapped OBJKT`,
+      message: `Upper bound price of swapped Objkt`,
       default: '999999',
       validate(priceRange) {
         return priceRange.match(/^\d*\.?\d+$/) ? true : 'Not the corrct format';
@@ -120,7 +120,7 @@ const questionEditionsRange = async () => {
     {
       type: 'input',
       name: 'minimum',
-      message: `Minimum amount of OBJKT edtion`,
+      message: `Minimum amount of Objkt edtion`,
       default: '1',
       validate(editionsRange) {
         return editionsRange.match(/^(\d+)$/) ? true : 'Not the corrct format';
@@ -132,7 +132,7 @@ const questionEditionsRange = async () => {
     {
       type: 'input',
       name: 'maximum',
-      message: `Maximum amount of OBJKT edtion`,
+      message: `Maximum amount of Objkt edtion`,
       default: '999999',
       validate(editionsRange) {
         return editionsRange.match(/^(\d+)$/) ? true : 'Not the corrct format';
