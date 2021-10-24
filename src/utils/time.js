@@ -52,7 +52,7 @@ export const stopIndicator = (interval, clear = true) => {
  * @param {*} ms
  * @returns
  */
-export const wait = async (ms) => Promise((resolve) => setTimeout(resolve, ms));
+export const wait = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  *
@@ -61,7 +61,7 @@ export const wait = async (ms) => Promise((resolve) => setTimeout(resolve, ms));
  * @returns
  */
 export const waitThenThrow = async (ms, message) => (
-  Promise(() => {
+  new Promise(() => {
     setTimeout(() => {
       throw message;
     }, ms);
