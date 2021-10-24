@@ -220,6 +220,9 @@ const questionSecretKey = async (tokenId) => {
   return answer;
 };
 
+/**
+ *
+ */
 const watchSwaps = async () => {
   const { priceRange } = await questionPriceRange();
   const { editionsRange } = await questionEditionsRange();
@@ -239,7 +242,7 @@ const watchSwaps = async () => {
   let connection;
 
   try {
-    connection = await buildConnection();
+    connection = buildConnection();
     await connection.start();
 
     // get target swap

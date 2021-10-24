@@ -10,7 +10,7 @@ export const { tzktEventUrl } = config.tezos;
  *
  * @returns
  */
-export const buildConnection = async () => {
+export const buildConnection = () => {
   const connection = new HubConnectionBuilder()
     .configureLogging(LogLevel.None)
     .withUrl(tzktEventUrl)
@@ -27,6 +27,10 @@ export const buildConnection = async () => {
  */
 export const subscribeToOperations = (connection, callback, payload) => (
   new Promise((resolve, reject) => {
+    process.on('SIGINT', () => {
+      reject(new Error('Exit the program.'));
+    });
+
     connection.on('operations', (message) => {
       callback(message, resolve, reject, payload);
     });
