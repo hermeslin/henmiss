@@ -67,3 +67,8 @@ export const waitThenThrow = async (ms, message) => (
     }, ms);
   })
 );
+
+/**
+ *
+ */
+export const nowDateTime = () => moment(moment(new Date()).utc()).format('YYYY-MM-DDTHH:mm:ss[Z]');
